@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            background: url('https://source.unsplash.com/1600x900/?art,abstract') no-repeat center center/cover;
+            color: #333;
+            font-family: 'Poppins', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .navbar {
+            background-color: #0d6efd;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .nav-link {
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .navbar .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .container {
+            max-width: 500px;
+            background: white;
+            padding: 30px;
+            margin: 50px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        .profile-pic-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #0d6efd;
+        }
+
+        .upload-btn {
+            margin-top: 10px;
+            background: #0d6efd;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .upload-btn:hover {
+            background: #094bb5;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .btn-save {
+            width: 100%;
+            background: #0d6efd;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .btn-save:hover {
+            background: #094bb5;
+        }
+        #flash-messages {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            text-align: center;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .flash-message {
+            padding: 12px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 14px;
+            display: inline-block;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.3s ease-in-out;
+            min-width: 250px;
+            text-align: center;
+        }
+
+        .flash-message.success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .flash-message.error {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a class="nav-link" href="{{ url_for('student_dashboard')}}">Dashboard</a>
+        <div class="nav-items">
+            <a class="nav-link" href="{{ url_for('student_dashboard')}}">Home</a>
+            <a class="nav-link" href="#">Notifications</a>
+            <a class="nav-link" href="{{ url_for('edit_profile') }}">Profile</a>
+            <a class="nav-link" href="#">History</a>
+            <a class="nav-link" href="#">Reservation</a>
+            <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div id="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        <h1>Edit Your Profile</h1>
+        <form method="POST" action="/edit_profile" enctype="multipart/form-data">
+            <!-- PROFILE PICTURE OR LIKE DEFAULT JUD SIYA BUT STUDENTS CAN EDIT IT -->
+            <div class="profile-pic-container">
+                <img id="profile-pic" class="profile-pic" 
+                     src="{{ url_for('static', filename='uploads/' + (student.profile_picture if student.profile_picture else 'def.png')) }}" 
+                     alt="Profile Picture">
+                
+                <input type="file" name="profile_image" id="profile-upload" style="display:none;" accept="image/*">
+                <br>
+                <button class="upload-btn" type="button" onclick="document.getElementById('profile-upload').click();">
+                    📷 Change Profile Picture
+                </button>
+            </div>
+            
+            <!-- STUDENT DETAILS  -->
+            <div class="form-group">
+                <label for="firstname">First Name</label>
+                <input type="text" name="firstname" id="firstname" value="{{ student.firstname }}" placeholder="Enter your first name">
+            </div>
+            
+            <div class="form-group">
+                <label for="lastname">Last Name</label>
+                <input type="text" name="lastname" id="lastname" value="{{ student.lastname }}" placeholder="Enter your last name">
+            </div>
+            
+            <div class="form-group">
+                <label for="middlename">Middle Name</label>
+                <input type="text" name="middlename" id="middlename" value="{{ student.middlename }}" placeholder="Enter your middle name">
+            </div>
+        
+            <div class="form-group">
+                <label for="course">Course</label>
+                <input type="text" name="course" id="course" value="{{ student.course }}" placeholder="Your Course">
+            </div>
+        
+            <div class="form-group">
+                <label for="year_level">Year Level</label>
+                <input type="text" name="year_level" id="year_level" value="{{ student.year_level }}" placeholder="Year Level (e.g. 1st Year)">
+            </div>
+        
+            <div class="form-group">
+                <label for="email_address">Email Address</label>
+                <input type="email" name="email_address" id="email_address" value="{{ student.email_address }}" placeholder="Your Email">
+            </div>
+        
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" name="address" id="address" value="{{ student.address }}" placeholder="Enter your address">
+            </div>
+
+            <div class="form-group">
+                <label for="session_count">Session Count</label>
+                <input type="text" name="session_count" id="session_count" value="{{ student.session_count }}" readonly>
+            </div>
+            
+        
+            <button type="submit" class="btn-save">Save Changes</button>
+        </form>
+        
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function removeFlashMessages() {
+            setTimeout(() => {
+                let flashMessages = document.querySelectorAll(".flash-message");
+                flashMessages.forEach(message => {
+                    message.style.transition = "opacity 0.5s ease-out";
+                    message.style.opacity = "0";
+                    setTimeout(() => message.remove(), 200);
+                });
+            }, 2000); 
+        }
+
+        removeFlashMessages();  
+
+        function showFlashMessage(type, message) {
+            let flashContainer = document.getElementById("flash-messages");
+            if (!flashContainer) return;
+
+            let flashMessage = document.createElement("div");
+            flashMessage.className = `flash-message ${type}`;
+            flashMessage.textContent = message;
+
+            flashContainer.appendChild(flashMessage);
+
+            removeFlashMessages(); 
+        }
+
+        document.getElementById("profile-upload").addEventListener("change", function(event) {
+            let file = event.target.files[0];
+            if (!file) return;
+
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById("profile-pic").src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+
+            let formData = new FormData();
+            formData.append("file", file);
+
+            fetch("/upload_profile_picture", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showFlashMessage("success", "✅ Profile picture updated!");
+                    document.getElementById("profile-pic").src = `/static/uploads/${data.image_filename}?t=${new Date().getTime()}`;
+                } else {
+                    showFlashMessage("error", "❌ " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error uploading image:", error);
+                showFlashMessage("error", "❌ Error uploading image. Please try again.");
+            });
+        });
+
+        let profileForm = document.getElementById("profileForm");
+            if (profileForm) {
+                profileForm.addEventListener("submit", function(event) {
+                    event.preventDefault();  
+
+                    let formData = new FormData(this);
+
+                    fetch("/save_profile", {
+                        method: "POST",
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        showFlashMessage(data.success ? "success" : "error", data.message);
+                    })
+                    .catch(error => {
+                        console.error("Error saving profile:", error);
+                        showFlashMessage("error", "❌ Error saving profile.");
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+    body {
+        background-color: #f8f9fa;
+        color: #333;
+        font-family: 'Poppins', Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* FLASH MESSAGE CONTAINER */
+    #message-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1050;
+    }
+
+    /* FLASH MESSAGE */
+    .custom-alert {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 20px;
+        font-size: 1rem;
+        font-weight: 500;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        opacity: 1;
+        transition: opacity 0.5s ease-in-out !important;
+        margin-bottom: 5px;
+        width: 100%;
+        text-align: center;
+        position: relative;
+    }
+
+    /* SUCCESS */
+    .alert-success {
+        background-color: #d1e7dd;
+    }
+
+    /* WARNING */
+    .alert-warning {
+        background-color: #fff3cd;
+        color: #664d03;
+        border-left: 5px solid #ffc107;
+    }
+
+    /* ERROR */
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #842029;
+        border-left: 5px solid #dc3545;
+    }
+
+    /* INFO */
+    .alert-info {
+        background-color: #cff4fc;
+        color: #055160;
+        border-left: 5px solid #0dcaf0;
+    }
+
+    /* CLOSE BUTTON */
+    .btn-close {
+        background: none;
+        border: none;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        color: black;
+        margin-left: 10px; 
+    }
+
+    .btn-close:hover {
+        color: red;
+    }
+
+
+    /* NAVIGATION BAR */
+    .navbar {
+        background-color: #0d6efd;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar .nav-link {
+        color: white;
+        font-weight: bold;
+        margin-right: 15px;
+        text-decoration: none;
+        font-size: 1rem;
+        padding: 8px 12px;
+        border-radius: 5px;
+        transition: background 0.3s ease-in-out;
+    }
+
+    .navbar .navbar-brand {
+        color: white;
+        font-weight: 600;
+        font-size: 1.6rem;
+        text-decoration: none;
+    }
+   
+
+    .navbar .nav-link:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* DASHBOARD CONTAINER */
+    .dashboard-container {
+        display: flex;
+        gap: 20px; 
+        margin: 20px 30px; 
+        padding-top: 20px;
+    }
+
+    .card {
+        background-color: white;
+        color: black;
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        margin: 20px 10px;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        border-radius: 8px;
+    }
+
+    .card-header {
+        background-color: #0d6efd;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+        padding: 12px;
+        font-size: 1.2rem;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+
+    .card-body {
+        padding: 20px;
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1.5;
+    }
+
+    .card-body p {
+        margin-bottom: 12px;
+        text-align: left;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+
+    /* IMAGE */
+    .profile-img {
+        width: 200px;
+        height: 200px;
+        display: block;
+        margin: 0 auto;
+    }
+    
+    .profile-pic-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .profile-pic {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #0d6efd;
+    }
+
+    /* STUDENT INFO CARD */
+    .student-info {
+        flex: 1 1 30%; 
+        max-width: 30%; 
+        height: 60vh;
+    }
+
+    /* ANNOUNCEMENT CARD */
+    .announcements {
+        flex: 1 1 auto; 
+        max-width: 50%; 
+    }
+
+    /* RULES AND REGULATION CARD */
+    .rules-card {
+        flex: 1 1 20%; 
+        max-width: 20%; 
+        height: 60vh;
+        overflow-y: auto;
+    }
+
+    /* TO HIDE YUNG SCROLLBAR  */
+    .rules-card .card-body {
+        overflow-y: scroll;
+        scrollbar-width: none; 
+        -ms-overflow-style: none; 
+    }
+
+    .rules-card .card-body::-webkit-scrollbar {
+        display: none; 
+    }
+
+    @media (max-width: 1024px) {
+        .student-info,
+        .announcements,
+        .rules-card {
+            flex: 1 1 100%;
+            max-width: 100%;
+        }
+
+        .navbar .navbar-brand {
+            font-size: 1.3rem;
+        }
+
+        .navbar .nav-link {
+            font-size: 1rem;
+        }
+
+        .card-header {
+            font-size: 1.1rem;
+            padding: 10px;
+        }
+
+        .card-body p {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .profile-pic {
+            width: 130px;
+            height: 130px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-container {
+            flex-direction: column;
+            margin: 10px;
+            padding-top: 10px;
+        }
+
+        .navbar {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar .navbar-brand {
+            font-size: 1.2rem;
+        }
+
+        .navbar .nav-link {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .card-header {
+            font-size: 1rem;
+            padding: 8px;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .card-body p {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .profile-img {
+            width: 180px;
+            height: 180px;
+        }
+
+        .profile-pic-container {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .profile-pic {
+            width: 130px;
+            height: 130px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .profile-img {
+            width: 150px;
+            height: 150px;
+        }
+
+        .profile-pic-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .profile-img {
+            width: 120px;
+            height: 120px;
+        }
+
+        .profile-pic-container {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+        }
+    }
+</style>
+</head>
+<body>
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar">
+        <a class="nav-link" href="{{ url_for('student_dashboard')}}">Dashboard</a>
+        <div class="nav-items">
+            <a class="nav-link" href="{{ url_for('student_dashboard')}}">Home</a>
+            <a class="nav-link" href="#">Notifications</a>
+            <a class="nav-link" href="{{ url_for('edit_profile') }}">Profile</a>
+            <a class="nav-link" href="#">History</a>
+            <a class="nav-link" href="#">Reservation</a>
+            <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a>
+        </div>
+    </nav>
+
+    <!-- ALERT MESSAGE -->
+    <div id="alert-container" class="alert-container" style="display: none;">
+        <div class="alert-box">
+            <span class="close-btn" onclick="this.parentElement.style.display='none'">&times;</span>
+            <p id="alert-message"></p>
+        </div>
+    </div>
+    
+    <!-- FLASH MESSAGE FROM FLASK -->
+    <div id="message-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="custom-alert alert-{{ category }}">
+                        <span>{{ message }}</span>
+                        <button type="button" class="btn-close" onclick="this.closest('.custom-alert').remove()">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                        
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- DASHBOARD CONTAINER -->
+    <div class="container dashboard-container">
+        <div class="card student-info">
+            <div class="card-header">
+                 Student Information
+            </div>
+            <div class="card-body text-start p-4" style="text-align: center;">
+                <!-- <img src="{{ url_for('static', filename='uploads/' + (student.profile_picture or 'profile_picture.png')) }}" alt="Profile Picture" width="150" height="150"> -->
+
+                <div class="profile-pic-container">
+                    <img id="profile-pic" class="profile-pic" 
+                         src="{{ url_for('static', filename='uploads/' + (student.profile_picture if student.profile_picture else 'def.png')) }}" 
+                         alt="Profile Picture">
+                </div>
+                <div class="student-details">
+                    <p><i class="bi bi-person-fill" style="padding: 8px;"></i>  <strong>Name:</strong> {{ student.firstname }} {{ student.middlename }} {{ student.lastname }}</p>
+                    <p><i class="bi bi-book" style="padding: 8px;"></i> <strong>Course:</strong> {{ student.course }}</p>
+                    <p><i class="bi bi-calendar" style="padding: 8px;"></i> <strong>Year:</strong> {{ student.year_level }}</p>
+                    <p><i class="bi bi-envelope" style="padding: 8px;"></i> <strong>Email:</strong> {{ student.email_address }}</p>
+                    <p><i class="bi bi-geo-alt" style="padding: 8px;"></i> <strong>Address:</strong> {{ student.address }}</p>
+                    <p><i class="bi bi-clock-history" style="padding: 8px;"></i> <strong>Session:</strong> {{ student.session_count }}</p>
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="card announcements" style="height: 60vh;">
+            <div class="card-header">Announcement</div>
+            <div class="card-body">
+                <h5>CCS Admin | 2025-Feb-03</h5>
+                <p>The College of Computer Studies will open the registration of students for the Sit-in privilege starting tomorrow. Thank you! Lab Supervisor</p>
+                <hr>
+                <h5>CCS Admin | 2024-May-08</h5>
+                <p>Important Announcement: We are excited to announce the launch of our new website! 🎉 Explore our latest products and services now!</p>
+            </div>
+        </div>
+
+        <div class="card rules-card" >
+            <div class="card-header">Rules and Regulation</div>
+            <div class="card-body" style="overflow-y: scroll;">
+                <h5 style="text-align: center; margin: 0; font-size: 1.2em;">University of Cebu</h5>
+                <p><strong>COLLEGE OF INFORMATION & COMPUTER STUDIES</strong></p>
+                <p><strong>LABORATORY RULES AND REGULATIONS</strong></p>
+                <ol>
+                    <li>Maintain silence, proper decorum, and discipline inside the laboratory.</li>
+                    <li>Games are not allowed inside the lab.</li>
+                    <li>Surfing the Internet is allowed only with the permission of the instructor.</li>
+                    <li>Maintain silence, proper decorum, and discipline inside the laboratory.</li>
+                    <li>Games are not allowed inside the lab.</li>
+                    <li>Surfing the Internet is allowed only with the permission of the instructor.</li>
+                    <li>Maintain silence, proper decorum, and discipline inside the laboratory.</li>
+                    <li>Games are not allowed inside the lab.</li>
+                    <li>Surfing the Internet is allowed only with the permission of the instructor.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let alerts = document.querySelectorAll(".custom-alert");
+    
+            alerts.forEach(function (alert) {
+                setTimeout(function () {
+                    alert.style.opacity = "0";
+                    setTimeout(() => alert.remove(), 500);
+                }, 2000); 
+            });
+        });
+    </script>
+    
+</body>
+</html>

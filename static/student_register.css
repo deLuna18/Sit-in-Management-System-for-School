@@ -1,0 +1,101 @@
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+fieldset {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+legend {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #555;
+}
+
+.w3-input {
+    margin-bottom: 15px;
+}
+
+.w3-button {
+    width: 100%; 
+    padding: 10px;
+    font-size: 1.1em;
+    background-color: #00618A !important;  
+    border: none;
+    color: white;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    margin: 0 auto;  
+    display: block;  
+}
+
+.w3-button:hover {
+    background-color: #00618ae8 !important;  
+    color: white !important;
+}
+
+p {
+    text-align: center;
+    margin-top: 20px;
+}
+
+a {
+    color: #00618A;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #00618A;
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin: 20px;
+        padding: 15px;
+    }
+    fieldset {
+        padding: 15px;
+    }
+    h2 {
+        font-size: 1.5em;
+    }
+    legend {
+        font-size: 1em;
+    }
+    button {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        margin: 10px;
+        padding: 10px;
+    }
+    fieldset {
+        padding: 10px;
+    }
+    h2 {
+        font-size: 1.3em;
+    }
+    legend {
+        font-size: 0.9em;
+    }
+    button {
+        font-size: 0.9em;
+    }
+}

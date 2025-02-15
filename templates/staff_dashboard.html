@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/staff_dashboard.css">
+    <title>Staff Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ username }}!</h1>
+    <h2>Staff Management</h2>
+    
+    <!-- Search Form -->
+    <form method="POST" action="/search_staff">
+        <input type="text" name="search_query" placeholder="Search Staff" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Display Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Display Staff List -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Course</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for staff in staff_list %}
+                <tr>
+                    <td>{{ staff.id }}</td>
+                    <td>{{ staff.firstname }} {{ staff.lastname }}</td>
+                    <td>{{ staff.course }}</td>
+                    <td>{{ staff.email_address }}</td>
+                    <td>
+                        <!-- Delete Staff Button -->
+                        <form method="POST" action="/delete_staff/{{ staff.id }}">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="/logout">Logout</a>
+</body>
+</html>

@@ -161,7 +161,7 @@
             <a class="nav-link" href="#">Notifications</a>
             <a class="nav-link" href="{{ url_for('edit_profile') }}">Profile</a>
             <a class="nav-link" href="#">History</a>
-            <a class="nav-link" href="#">Reservation</a>
+            <a class="nav-link" href="{{ url_for('student_reservation')}}">Reservation</a>
             <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a>
         </div>
     </nav>
@@ -192,6 +192,11 @@
             </div>
             
             <!-- STUDENT DETAILS  -->
+            <div class="form-group">
+                <label for="idno">IDNO</label>
+                <input type="text" name="idno" id="idno" value="{{ student.idno }}" placeholder="IDNO" readonly>
+            </div>
+
             <div class="form-group">
                 <label for="firstname">First Name</label>
                 <input type="text" name="firstname" id="firstname" value="{{ student.firstname }}" placeholder="Enter your first name">

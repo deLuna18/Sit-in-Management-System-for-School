@@ -351,7 +351,7 @@
             <a class="nav-link" href="#">Notifications</a>
             <a class="nav-link" href="{{ url_for('edit_profile') }}">Profile</a>
             <a class="nav-link" href="#">History</a>
-            <a class="nav-link" href="#">Reservation</a>
+            <a class="nav-link" href="{{ url_for('student_reservation')}}">Reservation</a>
             <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a>
         </div>
     </nav>
@@ -396,6 +396,7 @@
                          alt="Profile Picture">
                 </div>
                 <div class="student-details">
+                    <p><i class="bi bi-person-fill" style="padding: 8px;"></i>  <strong>IDNO:</strong> {{ student.idno }}</p>
                     <p><i class="bi bi-person-fill" style="padding: 8px;"></i>  <strong>Name:</strong> {{ student.firstname }} {{ student.middlename }} {{ student.lastname }}</p>
                     <p><i class="bi bi-book" style="padding: 8px;"></i> <strong>Course:</strong> {{ student.course }}</p>
                     <p><i class="bi bi-calendar" style="padding: 8px;"></i> <strong>Year:</strong> {{ student.year_level }}</p>

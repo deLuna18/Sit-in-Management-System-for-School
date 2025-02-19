@@ -5,9 +5,18 @@ from werkzeug.utils import secure_filename
 from PIL import Image  
 
 
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
 
 app = Flask(__name__)
 app.secret_key = "deluna"
+
+SMTP_SERVER = "smtp.gmail.com" 
+SMTP_PORT = 587
+EMAIL_ADDRESS = "deluna.alexa494@gmail.com"  
+EMAIL_PASSWORD = "xofo wvge gyaj imou" 
 
 UPLOAD_FOLDER = "static/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
@@ -36,22 +45,77 @@ def home():
 # LOGIN STUDENT
 @app.route("/student_login", methods=["GET", "POST"])
 def student_login():
+    # Check if "Remember Me" cookie is set
+    username_cookie = request.cookies.get("username")
+    if username_cookie:
+        session["user"] = username_cookie
+        return redirect("/student_dashboard")
+
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        user = dbhelper.get_username(username)  
+        remember_me = request.form.get("remember_me")  # Check if "Remember Me" is checked
+        user = dbhelper.get_username(username)
 
         if user and user[0]["password"] == password:
             session["user"] = username
-            session["idno"] = user[0]["idno"] 
-            session['logged_in'] = True
-            flash("Login successful!", "success")  
+            session["idno"] = user[0]["idno"]
+            session["logged_in"] = True
+            flash("Login successful!", "success")
+
+            # Set a cookie if "Remember Me" is checked
+            if remember_me:
+                resp = make_response(redirect("/student_dashboard"))
+                resp.set_cookie("username", username, max_age=30*24*60*60, path='/')  # Cookie expires in 30 days
+                return resp
             return redirect("/student_dashboard")
 
-        flash("Invalid username or password.", "danger") 
+        flash("Invalid username or password.", "danger")
         return redirect("/student_login")
 
     return render_template("student_login.html")
+
+# FORGOT PASSWORD
+@app.route('/forgot-password', methods=['POST'])
+def forgot_password():
+    email = request.form.get('email')
+
+    if not email:
+        flash('Please enter a valid email address.', 'danger')
+        return redirect(url_for('login', forgot_password=True))
+
+    msg = MIMEMultipart()
+    msg["From"] = EMAIL_ADDRESS
+    msg["To"] = email
+    msg["Subject"] = "Password Reset Request"
+
+    body = f"""
+    Hi,
+
+    You requested a password reset. Click the link below to reset your password:
+
+    http://yourwebsite.com/reset-password?email={email}
+
+    If you did not request this, please ignore this email.
+
+    Regards,
+    Your Team
+    """
+    msg.attach(MIMEText(body, "plain"))
+
+    try:
+        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+        server.starttls()  
+        server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+        server.sendmail(EMAIL_ADDRESS, email, msg.as_string())
+        server.quit()
+
+        flash('A password reset link has been sent to your email.', 'success')
+    except Exception as e:
+        flash(f'Error sending email: {str(e)}', 'danger')
+
+    return redirect(url_for('student_login', forgot_password=True))
+
 
 # REGISTRATION
 @app.route("/student_register", methods=["GET", "POST"])
@@ -101,12 +165,13 @@ def student_register():
     
 #     return render_template("student_dashboard.html", student=student_info)
 
+# STUDENT DASHBOARD
 @app.route("/student_dashboard")
 def student_dashboard():
     if "user" not in session:
         flash("Please log in first.", "warning")
         return redirect("/student_login")
-    
+
     student_info = dbhelper.get_student_by_username(session["user"])
 
     if not student_info:
@@ -114,9 +179,7 @@ def student_dashboard():
         return redirect("/student_login")
 
     session["student_info"] = student_info  
-    
     return render_template("student_dashboard.html", student=student_info)
-
 
 # UPLOAD PROFILE PICTURE
 @app.route("/upload_profile_picture", methods=["POST"])
@@ -170,9 +233,6 @@ def edit_profile():
         course = request.form.get('course', '')
         year_level = request.form.get('year_level', '')
         email_address = request.form.get('email_address', '')
-        address = request.form.get('address', '')
-
-        print("Received Address:", address)
         
         profile_picture = student.get("profile_picture", "def.png")  
 
@@ -199,7 +259,7 @@ def edit_profile():
 
         # UPDATE STUDENT PROFILE IN THE DATABASEEE
         success = update_student_profile(username, firstname, middlename, lastname, course, 
-                                         year_level, email_address, address, profile_picture)
+                                         year_level, email_address, profile_picture)
         print("Profile update success:", success)  
 
         if success:
@@ -230,7 +290,6 @@ def save_profile():
     course = request.form.get('course')
     year_level = request.form.get('year_level')
     email_address = request.form.get('email_address')
-    address = request.form.get('address')
 
     profile_picture = student.get("profile_picture", "profile_picture.png")
     if 'profile_image' in request.files:
@@ -242,7 +301,7 @@ def save_profile():
             profile_picture = filename  
 
     success = update_student_profile(username, firstname, middlename, lastname, course, 
-                                     year_level, email_address, address, profile_picture)
+                                     year_level, email_address, profile_picture)
 
     if success:
         session["student_info"] = get_student_by_username(username)
@@ -282,13 +341,19 @@ def student_reservation():
 
     return render_template("student_reservation.html", student=student)
 
+# HISTORY FOR STUDENT RESERVATION
+@app.route("/student_history")
+def student_history():
+    return render_template("student_history_reservation.html", student_history = student_history)
 
 # LOGOUT FOR STUDENTS
 @app.route("/logout")
 def logout():
-    flash("Logout Successfully", "success")
-    session.pop("user", None)
-    return redirect("/student_login")
+    session.clear()
+    resp = make_response(redirect("/student_login"))
+    resp.delete_cookie("username")  # Delete the "Remember Me" cookie
+    flash("You have been logged out.", "success")
+    return resp
 
 
 

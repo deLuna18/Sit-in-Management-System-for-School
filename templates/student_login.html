@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../static/student_login.css">
 </head>
 <body>
+    <!-- MESSAGE -->
     <div id="message-container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -22,17 +23,20 @@
         {% endwith %}
     </div>
 
+    <!-- LOGIN CONTAINER  -->
     <div class="login-container">
         <div class="logo-container">
             <img src="../static/images/uc.png" alt="Logo">
         </div>
 
+        <!-- LOGO -->
         <div class="login-title">
             <div class="line"></div>
             <h2>LOGIN</h2>
             <div class="line"></div>
         </div>
 
+        <!-- LOGIN FORM -->
         <form method="POST">
             <div class="input-group">
                 <span class="input-icon"><i class="fas fa-user"></i></span>
@@ -44,10 +48,40 @@
                 <input class="form-input" type="password" name="password" id="password" placeholder="Enter Password" required>
             </div>
 
+            <!-- REMEMBER ME -->
+            <div class="d-flex justify-content-between" style="margin-bottom: 40px;">
+                <label for="remember-me">
+                    <input type="checkbox" name="remember_me" id="remember_me"> Remember Me
+                </label>
+                <a href="#" class="forgot-password-link" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Forgot Password?</a>
+            </div>
+            
+            <!-- LOGIN BUTTON -->
             <button type="submit" class="login-button">Login</button>
         </form>
 
         <p class="text-center">Don't have an account? <a href="{{ url_for('student_register') }}">Register</a></p>
+
+        <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="forgotPasswordModalLabel">Forgot Password</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Forgot Password Form -->
+                        <form method="POST" action="{{ url_for('forgot_password') }}">
+                            <div class="input-group">
+                                <span class="input-icon"><i class="fas fa-envelope"></i></span>
+                                <input class="form-input" type="email" name="email" placeholder="Enter your email address" required>
+                            </div>
+                            <button type="submit" class="login-button">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -63,6 +97,52 @@
                     setTimeout(() => alert.remove(), 500); 
                 });
             }, 3000); 
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Auto-open the forgot password modal if the URL contains '?forgot_password=true'
+            const params = new URLSearchParams(window.location.search);
+            if (params.has("forgot_password")) {
+                var forgotPasswordModal = new bootstrap.Modal(document.getElementById('forgotPasswordModal'));
+                forgotPasswordModal.show();
+            }
+
+            // Auto-hide alerts after 3 seconds
+            setTimeout(function () {
+                let alerts = document.querySelectorAll(".alert");
+                alerts.forEach(function (alert) {
+                    alert.classList.remove("show");  
+                    alert.classList.add("fade");    
+                    setTimeout(() => alert.remove(), 500); 
+                });
+            }, 3000); 
+        });
+
+        // Function to check if user details are saved
+        document.addEventListener("DOMContentLoaded", function () {
+            if (localStorage.getItem("rememberMe") === "true") {
+                document.getElementById("email").value = localStorage.getItem("email");
+                document.getElementById("rememberMe").checked = true;
+            }
+        });
+
+        // Handle form submission
+        document.getElementById("loginForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent actual form submission
+
+            let email = document.getElementById("email").value;
+            let rememberMe = document.getElementById("rememberMe").checked;
+
+            if (rememberMe) {
+                localStorage.setItem("email", email);
+                localStorage.setItem("rememberMe", "true");
+            } else {
+                localStorage.removeItem("email");
+                localStorage.setItem("rememberMe", "false");
+            }
+
+            // Continue with your login process (AJAX request or form submission)
+            alert("Login submitted! Implement actual authentication.");
         });
     </script>
 </body>

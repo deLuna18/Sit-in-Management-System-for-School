@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History Information</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F8F9FA;
+            color: #333;
+        }
+        .navbar {
+            background-color: #0D6EFD;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .navbar .nav-link {
+            color: white;
+            font-weight: 600;
+            margin-right: 15px;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .navbar .nav-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .container {
+            max-width: 1100px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+        h2 {
+            color: #00618A;
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        .table-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .search-bar {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 250px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #00618A;
+            color: white;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination button {
+            background-color: #0D6EFD;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .pagination button:hover {
+            background-color: #00618A;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a class="nav-link" href="{{ url_for('student_dashboard') }}">Dashboard</a>
+        <div class="nav-items">
+            <a class="nav-link" href="{{ url_for('student_dashboard') }}">Home</a>
+            <a class="nav-link" href="#">Notifications</a>
+            <a class="nav-link" href="{{ url_for('edit_profile') }}">Profile</a>
+            <a class="nav-link" href="{{ url_for('student_history') }}">History</a>
+            <a class="nav-link" href="{{ url_for('student_reservation') }}">Reservation</a>
+            <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a>
+        </div>
+    </nav>
+    <div class="container">
+        <h2>History Information</h2>
+        <div class="table-controls">
+            <div>
+                <label>Entries per page:</label>
+                <select>
+                    <option>10</option>
+                    <option>20</option>
+                    <option>50</option>
+                </select>
+            </div>
+            <input type="text" placeholder="Search..." class="search-bar">
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Number</th>
+                    <th>Name</th>
+                    <th>Sit Purpose</th>
+                    <th>Laboratory</th>
+                    <th>Login</th>
+                    <th>Logout</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="8" style="text-align: center; color: gray;">No data available</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="pagination">
+            <button class="prev">&lt;</button>
+            <span>1</span>
+            <button class="next">&gt;</button>
+        </div>
+    </div>
+</body>
+</html>

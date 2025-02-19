@@ -167,7 +167,7 @@
     </nav>
     
     <div class="container">
-        <div id="flash-messages">
+        <div id="flash-messages">a
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
@@ -221,15 +221,10 @@
                 <label for="year_level">Year Level</label>
                 <input type="text" name="year_level" id="year_level" value="{{ student.year_level }}" placeholder="Year Level (e.g. 1st Year)">
             </div>
-        
+
             <div class="form-group">
                 <label for="email_address">Email Address</label>
-                <input type="email" name="email_address" id="email_address" value="{{ student.email_address }}" placeholder="Your Email">
-            </div>
-        
-            <div class="form-group">
-                <label for="address">Address</label>
-                <input type="text" name="address" id="address" value="{{ student.address }}" placeholder="Enter your address">
+                <input type="text" name="email_address" id="email_address" value="{{ student.email_address }}" placeholder="Email Address (e.g. 1st Year)">
             </div>
 
             <div class="form-group">
@@ -245,86 +240,85 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            function removeFlashMessages() {
-            setTimeout(() => {
-                let flashMessages = document.querySelectorAll(".flash-message");
-                flashMessages.forEach(message => {
-                    message.style.transition = "opacity 0.5s ease-out";
-                    message.style.opacity = "0";
-                    setTimeout(() => message.remove(), 200);
-                });
-            }, 2000); 
-        }
+    // Function to remove flash messages after some time
+    function removeFlashMessages() {
+        setTimeout(() => {
+            let flashMessages = document.querySelectorAll(".flash-message");
+            flashMessages.forEach(message => {
+                message.style.transition = "opacity 0.5s ease-out";
+                message.style.opacity = "0";
+                setTimeout(() => message.remove(), 200);
+            });
+        }, 2000);
+    }
 
-        removeFlashMessages();  
+    removeFlashMessages();
 
-        function showFlashMessage(type, message) {
-            let flashContainer = document.getElementById("flash-messages");
-            if (!flashContainer) return;
+    // Function to show flash messages
+    function showFlashMessage(type, message) {
+        let flashContainer = document.getElementById("flash-messages");
+        if (!flashContainer) return;
 
-            let flashMessage = document.createElement("div");
-            flashMessage.className = `flash-message ${type}`;
-            flashMessage.textContent = message;
+        let flashMessage = document.createElement("div");
+        flashMessage.className = `flash-message ${type}`;
+        flashMessage.textContent = message;
 
-            flashContainer.appendChild(flashMessage);
+        flashContainer.appendChild(flashMessage);
 
-            removeFlashMessages(); 
-        }
+        removeFlashMessages();
+    }
 
-        document.getElementById("profile-upload").addEventListener("change", function(event) {
-            let file = event.target.files[0];
-            if (!file) return;
+    // Handle profile picture change (preview only, no upload)
+    document.getElementById("profile-upload").addEventListener("change", function(event) {
+        let file = event.target.files[0];
+        if (!file) return;
 
-            let reader = new FileReader();
-            reader.onload = function (e) {
-                document.getElementById("profile-pic").src = e.target.result;
-            };
-            reader.readAsDataURL(file);
+        let reader = new FileReader();
+        reader.onload = function (e) {
+            // Preview the new profile picture
+            document.getElementById("profile-pic").src = e.target.result;
+        };
+        reader.readAsDataURL(file);
 
-            let formData = new FormData();
-            formData.append("file", file);
+        // Store the selected file in a global variable (only for later use when form is submitted)
+        window.selectedProfileImage = file;
+    });
 
-            fetch("/upload_profile_picture", {
+    // Handle form submission
+    let profileForm = document.getElementById("profileForm");
+    if (profileForm) {
+        profileForm.addEventListener("submit", function(event) {
+            event.preventDefault();  // Prevent the form from submitting normally
+
+            let formData = new FormData(this);
+
+            // If a new profile picture was selected, append it to the form data
+            if (window.selectedProfileImage) {
+                formData.append("file", window.selectedProfileImage);
+            }
+
+            // Send the form data (including profile picture if any) to the server
+            fetch("/save_profile", {
                 method: "POST",
                 body: formData
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    showFlashMessage("success", "✅ Profile picture updated!");
+                showFlashMessage(data.success ? "success" : "error", data.message);
+
+                // If the profile picture was updated successfully, show the new picture
+                if (data.success && data.image_filename) {
                     document.getElementById("profile-pic").src = `/static/uploads/${data.image_filename}?t=${new Date().getTime()}`;
-                } else {
-                    showFlashMessage("error", "❌ " + data.message);
                 }
             })
             .catch(error => {
-                console.error("Error uploading image:", error);
-                showFlashMessage("error", "❌ Error uploading image. Please try again.");
+                console.error("Error saving profile:", error);
+                showFlashMessage("error", "❌ Error saving profile.");
             });
         });
+    }
+});
 
-        let profileForm = document.getElementById("profileForm");
-            if (profileForm) {
-                profileForm.addEventListener("submit", function(event) {
-                    event.preventDefault();  
-
-                    let formData = new FormData(this);
-
-                    fetch("/save_profile", {
-                        method: "POST",
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        showFlashMessage(data.success ? "success" : "error", data.message);
-                    })
-                    .catch(error => {
-                        console.error("Error saving profile:", error);
-                        showFlashMessage("error", "❌ Error saving profile.");
-                    });
-                });
-            }
-        });
     </script>
 </body>
 </html>

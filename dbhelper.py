@@ -25,7 +25,7 @@ def postprocess(sql: str, params: tuple = ()) -> bool:
 def is_idno_exists(idno: int) -> bool:
     sql = "SELECT idno FROM users WHERE idno = ?"
     result = getprocess(sql, (idno,))
-    return len(result) > 0  # True if IDNO exists
+    return len(result) > 0  
 
 # CHECK IF USERNAME ALREADY EXISTS
 def get_username(username: str) -> list:
@@ -37,7 +37,7 @@ def get_all_users() -> list:
     sql = "SELECT * FROM users"
     return getprocess(sql)
 
-# USER REGISTRATION = USERS ARE STUDENTS
+# STUDENT REGISTRATION
 def register_user(idno: int, lastname: str, firstname: str, middlename: str, 
                   course: str, year_level: str, email_address: str, 
                   username: str, password: str) -> bool:
@@ -58,7 +58,7 @@ def register_user(idno: int, lastname: str, firstname: str, middlename: str,
 # GET STUDENT DATA BY USERNAME
 def get_student_by_username(username: str) -> dict:
     sql = """SELECT idno, lastname, firstname, middlename, course, year_level, 
-                    email_address, username, password, profile_picture, address
+                    email_address, username, password, profile_picture
              FROM users WHERE username = ?"""
     
     student_list = getprocess(sql, (username,))  
@@ -77,10 +77,8 @@ def update_profile_picture(username: str, filename: str) -> bool:
 
 # STUDENT UPDATE = EDIT STUDENT INFO
 def update_student_profile(username: str, firstname: str, middlename: str, lastname: str, 
-                           course: str, year_level: str, email_address: str, address: str, 
-                           profile_picture: str) -> bool:
+                           course: str, year_level: str, email_address: str, profile_picture: str) -> bool:
     print(f"Updating user: {username}")
-    print(f"New address: {address}")  
     sql = """UPDATE users SET 
                 firstname = ?, 
                 middlename = ?, 
@@ -88,12 +86,11 @@ def update_student_profile(username: str, firstname: str, middlename: str, lastn
                 course = ?, 
                 year_level = ?, 
                 email_address = ?, 
-                address = ?, 
                 profile_picture = ? 
             WHERE username = ?"""
     
     return postprocess(sql, (firstname, middlename, lastname, course, year_level, 
-                             email_address, address, profile_picture, username))
+                             email_address, profile_picture, username))
 
 
 # CREATE A STUDENT RESERVATION

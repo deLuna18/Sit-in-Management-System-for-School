@@ -9,10 +9,20 @@
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
+    :root {
+        --primary-color: #603A7E;
+        --secondary-color: #A08BB3;
+        --background-color: #F8F5FA;
+        --text-color: #2E1F33;
+        --accent-color: #FFD700;
+        --complementary-color: #3A7E60;
+        --border-color: #D6C9E1;
+    }
+
     body {
-        background-color: #f8f9fa;
-        color: #333;
         font-family: 'Poppins', Arial, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
         margin: 0;
         padding: 0;
     }
@@ -84,10 +94,9 @@
         color: red;
     }
 
-
     /* NAVIGATION BAR */
     .navbar {
-        background-color: #0d6efd;
+        background-color: var(--primary-color) !important;
         padding: 15px 20px;
         display: flex;
         justify-content: space-between;
@@ -96,7 +105,7 @@
     }
 
     .navbar .nav-link {
-        color: white;
+        color: white !important;
         font-weight: bold;
         margin-right: 15px;
         text-decoration: none;
@@ -112,7 +121,6 @@
         font-size: 1.6rem;
         text-decoration: none;
     }
-   
 
     .navbar .nav-link:hover {
         background: rgba(255, 255, 255, 0.2);
@@ -140,7 +148,7 @@
     }
 
     .card-header {
-        background-color: #0d6efd;
+        background-color: var(--primary-color);
         color: white;
         font-weight: 600;
         text-align: center;
@@ -182,14 +190,14 @@
         height: 150px;
         border-radius: 50%;
         object-fit: cover;
-        border: 3px solid #0d6efd;
+        border: 3px solid var(--primary-color);
     }
 
     /* STUDENT INFO CARD */
     .student-info {
         flex: 1 1 30%; 
         max-width: 30%; 
-        height: 60vh;
+        height: 70vh;
     }
 
     /* ANNOUNCEMENT CARD */
@@ -202,7 +210,7 @@
     .rules-card {
         flex: 1 1 20%; 
         max-width: 20%; 
-        height: 60vh;
+        height: 70vh;
         overflow-y: auto;
     }
 
@@ -407,7 +415,7 @@
         </div>
         
 
-        <div class="card announcements" style="height: 60vh;">
+        <div class="card announcements" style="height: 70vh;">
             <div class="card-header">Announcement</div>
             <div class="card-body">
                 <h5>CCS Admin | 2025-Feb-03</h5>

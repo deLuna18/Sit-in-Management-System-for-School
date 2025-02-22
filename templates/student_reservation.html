@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../static/images/ux.png">
     <title>Reservation Form</title>
     <style>
         * {
@@ -13,18 +14,16 @@
         }
 
         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background-color: #f4f7fc;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F8F5FA; /* Updated background color */
         }
 
         /* NAVIGATION BAR */
         .navbar {
             width: 100%;
-            background-color: #0D6EFD;
+            background-color: #603A7E; /* Updated primary color */
             padding: 15px 20px;
             display: flex;
             justify-content: space-between;
@@ -56,115 +55,69 @@
         }
 
         /* MAIN CONTAINER */
-        .container {
-            display: flex;
-            flex-direction: row;
-            width: 90%;
-            max-width: 900px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-            margin-top: 80px;
-        }
-
-        /* LEFT SECTION */
-        .left-section {
-            width: 40%;
-            background: #0D6EFD;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 30px;
-            color: white;
-            text-align: center;
-        }
-
-        .left-section img {
-            width: 80%;
-            border-radius: 10px;
-            margin-top: 15px;
-        }
-
-        /* RIGHT SECTION */
-        .right-section {
-            width: 60%;
-            padding: 40px;
-            background: white;
-        }
-
-        h2 {
+        .image-container {
+            width: 100%;
             text-align: center;
             margin-bottom: 20px;
-            font-size: 26px;
-            color: #0D6EFD;
-            font-weight: bold;
         }
-
-        /* FORM DESIGN */
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        label {
-            font-weight: 600;
-            color: #444;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        input {
+        .image-container img {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: border 0.3s ease-in-out;
+            max-height: 300px;
+            object-fit: cover;
         }
-
-        input:focus {
-            border: 1px solid #0D6EFD;
-            outline: none;
-            box-shadow: 0px 0px 5px rgba(13, 110, 253, 0.3);
+        .form-container {
+            width: 50%;
+            margin: 30px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
-
-        /* RESERVE BUTTON */
-        .reserve-btn {
-            width: 100%;
-            background: #0D6EFD;
-            color: white;
-            padding: 14px;
-            border: none;
-            border-radius: 5px;
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #ffffff;
+            border: 1px solid #D6C9E1; /* Updated border color */
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        .section-title {
             font-size: 18px;
             font-weight: bold;
+            color: #603A7E; /* Updated section title color */
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #A08BB3; /* Updated secondary color */
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2E1F33; /* Updated text color */
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #D6C9E1; /* Updated border color */
+            border-radius: 5px;
+        }
+        .reserve-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #603A7E; /* Updated primary color */
+            color: white;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
-            margin-top: 15px;
+            font-size: 16px;
             transition: background 0.3s ease-in-out;
         }
-
         .reserve-btn:hover {
-            background: #0A58CA;
+            background-color: #4B2D5E; /* Updated hover color */
         }
-
-        /* RESPONSIVE DESIGN */
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                width: 95%;
-            }
-
-            .left-section, .right-section {
-                width: 100%;
-                padding: 30px;
-            }
-
-            .left-section img {
-                width: 60%;
-            }
-        }
-
     </style>
 </head>
 <body>
@@ -183,14 +136,15 @@
     </nav>
 
     <!-- RESERVATION FORM CONTAINER -->
-    <div class="container">
-        <div class="left-section">
-            <h2>Reserve a Slot</h2>
-            <p>Fill out the form to book your reservation.</p>
-            <img src="../static/images/reserve_enhanced.jpg" alt="Reservation Image">
-        </div>
-        <div class="right-section">
-            <form method="POST" action="{{ url_for('student_reservation') }}">
+    <div class="image-container">
+        <img src="../static/images/lab.jpg" alt="Reservation Banner">
+    </div>
+    <div class="form-container">
+        <form method="POST" action="{{ url_for('student_reservation') }}">
+            
+            <!-- Personal Information Section -->
+            <div class="section">
+                <div class="section-title">Personal Information</div>
                 <div class="form-group">
                     <label>ID Number:</label>
                     <input type="text" name="idno" value="{{ student.idno }}" disabled>
@@ -199,6 +153,11 @@
                     <label>Student Name:</label>
                     <input type="text" value="{{ student.firstname }} {{ student.middlename }} {{ student.lastname }}" disabled>
                 </div>
+            </div>
+
+            <!-- Academic Information Section -->
+            <div class="section">
+                <div class="section-title">Academic Information</div>
                 <div class="form-group">
                     <label>Course:</label>
                     <input type="text" name="course" value="{{ student.course }}" disabled>
@@ -207,6 +166,11 @@
                     <label>Year Level:</label>
                     <input type="text" name="year_level" value="{{ student.year_level }}" disabled>
                 </div>
+            </div>
+
+            <!-- Reservation Details Section -->
+            <div class="section">
+                <div class="section-title">Reservation Details</div>
                 <div class="form-group">
                     <label>Purpose:</label>
                     <input type="text" name="purpose" placeholder="Enter purpose" required>
@@ -223,9 +187,11 @@
                     <label>Date:</label>
                     <input type="date" name="date" required>
                 </div>
-                <button type="submit" class="reserve-btn">Reserve</button>
-            </form>
-        </div>
+            </div>
+
+            <button type="submit" class="reserve-btn">Reserve</button>
+
+        </form>
     </div>
 
 </body>

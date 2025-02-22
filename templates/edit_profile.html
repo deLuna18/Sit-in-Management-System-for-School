@@ -40,7 +40,7 @@
         }
 
         .container {
-            max-width: 500px;
+            max-width: 800px;
             background: white;
             padding: 30px;
             margin: 50px auto;
@@ -167,7 +167,7 @@
     </nav>
     
     <div class="container">
-        <div id="flash-messages">a
+        <div id="flash-messages">
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}

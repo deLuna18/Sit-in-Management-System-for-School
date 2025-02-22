@@ -16,18 +16,24 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100vh;
-            background-color: #d4a59a;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f4f7fc;
         }
+
         /* NAVIGATION BAR */
         .navbar {
             width: 100%;
-            background-color: #0d6efd;
+            background-color: #0D6EFD;
             padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
         }
 
         .nav-items {
@@ -49,52 +55,60 @@
             background: rgba(255, 255, 255, 0.2);
         }
 
+        /* MAIN CONTAINER */
         .container {
             display: flex;
-            width: 80%;
-            max-width: 1000px;
+            flex-direction: row;
+            width: 90%;
+            max-width: 900px;
             background: white;
             border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
             overflow: hidden;
-            margin-top: 20px;
+            margin-top: 80px;
         }
 
+        /* LEFT SECTION */
         .left-section {
             width: 40%;
-            background: #6d5c78;
+            background: #0D6EFD;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 30px;
             color: white;
+            text-align: center;
         }
 
         .left-section img {
-            width: 100%;
+            width: 80%;
             border-radius: 10px;
+            margin-top: 15px;
         }
 
+        /* RIGHT SECTION */
         .right-section {
             width: 60%;
-            padding: 30px;
-            background: #fbe0dc;
+            padding: 40px;
+            background: white;
         }
 
         h2 {
             text-align: center;
             margin-bottom: 20px;
-            font-size: 24px;
-            color: #333;
+            font-size: 26px;
+            color: #0D6EFD;
+            font-weight: bold;
         }
 
+        /* FORM DESIGN */
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         label {
-            font-weight: bold;
+            font-weight: 600;
             color: #444;
             display: block;
             margin-bottom: 5px;
@@ -102,40 +116,59 @@
 
         input {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s ease-in-out;
         }
 
+        input:focus {
+            border: 1px solid #0D6EFD;
+            outline: none;
+            box-shadow: 0px 0px 5px rgba(13, 110, 253, 0.3);
+        }
+
+        /* RESERVE BUTTON */
         .reserve-btn {
             width: 100%;
-            background: #6d5c78;
+            background: #0D6EFD;
             color: white;
-            padding: 12px;
+            padding: 14px;
             border: none;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
             margin-top: 15px;
+            transition: background 0.3s ease-in-out;
         }
 
         .reserve-btn:hover {
-            background: #53415b;
+            background: #0A58CA;
         }
 
+        /* RESPONSIVE DESIGN */
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
-                width: 90%;
+                width: 95%;
             }
 
             .left-section, .right-section {
                 width: 100%;
+                padding: 30px;
+            }
+
+            .left-section img {
+                width: 60%;
             }
         }
+
     </style>
 </head>
 <body>
+
     <!-- NAVIGATION BAR -->
     <nav class="navbar">
         <a class="nav-link" href="{{ url_for('student_dashboard')}}">Dashboard</a>
@@ -148,9 +181,12 @@
             <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a>
         </div>
     </nav>
+
+    <!-- RESERVATION FORM CONTAINER -->
     <div class="container">
         <div class="left-section">
-            <h2>Reservation</h2>
+            <h2>Reserve a Slot</h2>
+            <p>Fill out the form to book your reservation.</p>
             <img src="../static/images/reserve_enhanced.jpg" alt="Reservation Image">
         </div>
         <div class="right-section">
@@ -191,5 +227,6 @@
             </form>
         </div>
     </div>
+
 </body>
 </html>
